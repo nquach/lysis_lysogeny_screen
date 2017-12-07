@@ -18,49 +18,57 @@ This repository contains data and scripts for the lysis-lysogeny screen of the K
 ## **Discription of .pkl files**
 * **all_pooled_classified_data.pkl** : contains all fluorescence data collected (i.e. pass 1 and pass 2 data pooled), classified into lytic, lysogenic, and uninfected events. Use the python cPickle package to unzip file. Unzips into a dict of list of lists. 
 Key = gene name. Item = list([lytic data, lysogenic data, uninfected data]), where each data list is of the form list([GFP data, Cherry data])
+* **all_pooled_data.pkl** : contains all fluorescence data collected (i.e. pass 1 and pass 2 data pooled), unclassified. Use python cPickle package to unzip file. Unzips into a dict of lists. Key = gene name. Item = list([GFP data, Cherry data])
+* **pass1_all_data.pkl** : contains fluorescence data from pass 1 of the library screen, unclassified. Use python cPickle to unzip file. Unzips into a dict of lists. Key = gene name. Item = list([GFP data, Cherry data])
+* **pass1_classified_data.pkl** : contains fluorescence data from pass 1 of the library screen, classified into lytic, lysogenic and uninfected events. Use the python cPickle package to unzip file. Unzips into a dict of list of lists. 
+Key = gene name. Item = list([lytic data, lysogenic data, uninfected data]), where each data list is of the form list([GFP data, Cherry data])
+* **pass2_all_data.pkl** : contains fluorescence data from the verification pass of the library screen, unclassified. Use python cPickle to unzip file. Unzips into a dict of lists. Key = gene name. Item = list([GFP data, Cherry data])
+* **pass2_classified_data.pkl** : contains fluorescence data from pass 1 of the library screen, classified into lytic, lysogenic and uninfected events. Use the python cPickle package to unzip file. Unzips into a dict of list of lists. 
+Key = gene name. Item = list([lytic data, lysogenic data, uninfected data]), where each data list is of the form list([GFP data, Cherry data])
+* **pass2_pooled_classified_data** : contains pooled fluorescence data for the strains included in the verification pass (i.e. hits found in pass 1 of the screen), classified nto lytic, lysogenic and uninfected events. Use the python cPickle package to unzip file. Unzips into a dict of list of lists. Key = gene name. Item = list([lytic data, lysogenic data, uninfected data]), where each data list is of the form list([GFP data, Cherry data])
 
 ## **Description of scripts**
 
 ### Analysis pipeline scripts:
 
-**analyze_hit_plate.py** : perform post-segmentation data analysis on pass1 hits
+`analyze_hit_plate.py` : perform post-segmentation data analysis on pass1 hits
 
-**analyze_keio_plate.py** : perform post-segmentation data analysis on a Keio library plate
+`analyze_keio_plate.py` : perform post-segmentation data analysis on a Keio library plate
 
-**compile_pass_pkl.py**: saves the classified and unclassified data for all plates within a pass of the Keio collection (either pass1 or 	pass2=verification pass)
+`compile_pass_pkl.py`: saves the classified and unclassified data for all plates within a pass of the Keio collection (either pass1 or 	pass2=verification pass)
 
-**compile_pkl.py**: saves the classified and unclassified data for each plate into a .pkl file.
+`compile_pkl.py`: saves the classified and unclassified data for each plate into a .pkl file.
 
-**compile_pooled_hits_dict.py** : converts the compiled classified data for the pooled data for pass1 hits into a dict of lists.
+`compile_pooled_hits_dict.py` : converts the compiled classified data for the pooled data for pass1 hits into a dict of lists.
 Saves the data as a .txt file in JSON format
 
-**data_analysis.py** : contains all functions for data organization, compilation and visualization. Functions are run in search_hits.py. 
+`data_analysis.py` : contains all functions for data organization, compilation and visualization. Functions are run in search_hits.py. 
 
-**DataVisualizer.ipynb** : iPython notebook that allows visualization of all data collected in the lysis-lysogeny screen.
+`DataVisualizer.ipynb` : iPython notebook that allows visualization of all data collected in the lysis-lysogeny screen.
 
-**keio_names.py** : contains all the functions for mapping positions to a gene name based off the map of the Keio collection
+`keio_names.py` : contains all the functions for mapping positions to a gene name based off the map of the Keio collection
 
-**plot_pooled_hits.py** : produces the plots for all the final hits, using pooled data between pass1 and pass2
+`plot_pooled_hits.py` : produces the plots for all the final hits, using pooled data between pass1 and pass2
 
-**plot.py** : produces plots for individual plates of the Keio collection or of pass1 hits.
+`plot.py` : produces plots for individual plates of the Keio collection or of pass1 hits.
 
-**pool_data.py** : merges all classified and unclassified data into large data structures indexed by gene name.
+`pool_data.py` : merges all classified and unclassified data into large data structures indexed by gene name.
 
-**pos_to_name.py** : produces a dictionary mapping positions and plates to a gene name
+`pos_to_name.py` : produces a dictionary mapping positions and plates to a gene name
 
-**search_hits.py** : script that allows you to search the dataset generated in pass1 and the pooled dataset for pass1 hits.
+`search_hits.py` : script that allows you to search the dataset generated in pass1 and the pooled dataset for pass1 hits.
 
-**segment_images.py** : script that segments all the images for a plate
+`segment_images.py` : script that segments all the images for a plate
 
-**SLIP_function.py** : contains all functions for the analysis pipeline
+`SLIP_function.py` : contains all functions for the analysis pipeline
 
 ### DeepCell & Analysis Pipeline dependencies:
 
-**cnn_functions.py** : contains all the functions necessary for running conv-nets
+`cnn_functions.py` : contains all the functions necessary for running conv-nets
 
-**model_zoo.py** : contains the conv-net architecture definitions
+`model_zoo.py` : contains the conv-net architecture definitions
 
-**tifffile.py** : functions to manipulate .tif files
+`tifffile.py` : functions to manipulate .tif files
 
 
 
