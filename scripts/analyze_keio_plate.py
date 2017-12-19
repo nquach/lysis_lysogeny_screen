@@ -38,32 +38,18 @@ for root_direc, plate_number in zip(data, plate_numbers):
 	mask_direc = os.path.join(root_direc, 'masks')
 	control_mask_direc = os.path.join(root_direc,'control_masks')
 	row_data = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-	col_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-	# Quantify the data from the infection wells
-	mean_FITC, mean_cherry = analyze_plate(data_direc, mask_direc, pos_list = range(25), row_names = row_data, col_names = col_data)
-	mean_FITC_name = os.path.join(root_direc, 'mean_FITC.pkl')
-	mean_cherry_name = os.path.join(root_direc, 'mean_cherry.pkl')
-	pickle.dump(mean_FITC, open(mean_FITC_name, 'wb'))
-	pickle.dump(mean_cherry, open(mean_cherry_name, 'wb'))
-
-	#Load saved data
-	mean_FITC_name = os.path.join(root_direc, 'mean_FITC.pkl')
-	mean_cherry_name = os.path.join(root_direc, 'mean_cherry.pkl')
-	mean_FITC = pickle.load(open(mean_FITC_name, 'rb'))
-	mean_cherry = pickle.load(open(mean_cherry_name, 'rb'))
-
-	#Plot the scatter plot of intensities
+	col_data = range(1,13)
 	wells = []
-	titles = []
-	keio_names_array = get_keio_names()
-
-	#Figure out the genes names for each position in the plate
 	for row in row_data:
 		for col in col_data:
 			well = row + str(col)
 			wells += [well]
-			titles += [pos_to_strain(keio_names_array, plate_number, well)]
-
+	# Quantify the data from the infection wells
+	mean_FITC, mean_cherry = analyze_plate(data_direc, mask_direc, pos_list = range(25), wells = wells, panorama = True)
+	mean_FITC_name = os.path.join(root_direc, 'mean_FITC.pkl')
+	mean_cherry_name = os.path.join(root_direc, 'mean_cherry.pkl')
+	pickle.dump(mean_FITC, open(mean_FITC_name, 'wb'))
+	pickle.dump(mean_cherry, open(mean_cherry_name, 'wb'))
 
 
 
