@@ -9,6 +9,7 @@ This repository contains data and scripts for the lysis-lysogeny screen of the K
 * /all_data_pkl folder contains all data from pass1 and pass2 of the Keio screen.
 
 ## How to run images through the analysis pipeline:
+0. Set the `ROOT_DIREC` variable to the local absolute path of the cloned repo.
 1. Run `segment_images.py` to segment images for a particular plate. Data must be organized in the directory tree of format root->position->images. Directory into which the masks will go into must be already created at runtime.
 
 2. Run `analyze_keio_plate.py` or `analyze_hits_plate.py` to extract fluorescence values from images using the masks.
@@ -26,8 +27,25 @@ Key = gene name. Item = list([lytic data, lysogenic data, uninfected data]), whe
 * **pass2_classified_data.pkl** : contains fluorescence data from pass 1 of the library screen, classified into lytic, lysogenic and uninfected events. Use the python cPickle package to unzip file. Unzips into a dict of list of lists. 
 Key = gene name. Item = list([lytic data, lysogenic data, uninfected data]), where each data list is of the form list([GFP data, Cherry data])
 * **pass2_pooled_classified_data** : contains pooled fluorescence data for the strains included in the verification pass (i.e. hits found in pass 1 of the screen), classified nto lytic, lysogenic and uninfected events. Use the python cPickle package to unzip file. Unzips into a dict of list of lists. Key = gene name. Item = list([lytic data, lysogenic data, uninfected data]), where each data list is of the form list([GFP data, Cherry data])
+* **K29_mean_cherry** : contains Cherry fluorescence data for the strains in Keio Plate 29. Use the python cPickle package to unzip file. Unzips into a dict of lists. Key = position string (e.g. 'A1'). Item = list of fluorescence values)
+* **K29_mean_FITC** : contains FITC fluorescence data for the strains in Keio Plate 29. Use the python cPickle package to unzip file. Unzips into a dict of lists. Key = position string (e.g. 'A1'). Item = list of fluorescence values)
+* **/pkl_files/CS_duplicate1** : contains FITC and Cherry fluorescence data for the strains for the carbon source experiments Trial 1. Use the python cPickle package to unzip the files. Unzips into a dict of lists. Key = position string (e.g. 'A1'). Item = list of fluorescence values for either FITC or Cherry channel)
+* **/pkl_files/CS_duplicate1** : contains FITC and Cherry fluorescence data for the strains for the carbon source experiments Trial 2. Use the python cPickle package to unzip the files. Unzips into a dict of lists. Key = position string (e.g. 'A1'). Item = list of fluorescence values for either FITC or Cherry channel)
 
 ## **Description of scripts**
+
+### iPython Notebooks:
+`SearchHits.ipynb` : Interactive notebook to search through the pooled data for genes displaying cell fate statistics meeting user-defined criteria
+
+`CarbonSourcePlotter.ipynb` : Notebook that plots the carbon source experiment data using different x-axis modes.
+
+`HitsHistogramMOI-LysisRatio` : Notebook that generates plots for Figure 3.9 in the manuscript
+
+`HitsScatterplotGenerator` : Notebook that generates plots for Figures 4.1 and 4.2 in the manuscript. Also generates MOI and lysis ratio plots for hits.
+
+`BulkAssayPlotter.ipynb` : Notebook that generates histograms for the bulk assay (Figure 3.5).
+
+`DataVisualizer.ipynb` : iPython notebook that allows visualization of all data collected in the lysis-lysogeny screen.
 
 ### Analysis pipeline scripts:
 
@@ -44,19 +62,11 @@ Saves the data as a .txt file in JSON format
 
 `data_analysis.py` : contains all functions for data organization, compilation and visualization. Functions are run in search_hits.py. 
 
-`DataVisualizer.ipynb` : iPython notebook that allows visualization of all data collected in the lysis-lysogeny screen.
-
 `keio_names.py` : contains all the functions for mapping positions to a gene name based off the map of the Keio collection
-
-`plot_pooled_hits.py` : produces the plots for all the final hits, using pooled data between pass1 and pass2
 
 `plot.py` : produces plots for individual plates of the Keio collection or of pass1 hits.
 
 `pool_data.py` : merges all classified and unclassified data into large data structures indexed by gene name.
-
-`pos_to_name.py` : produces a dictionary mapping positions and plates to a gene name
-
-`search_hits.py` : script that allows you to search the dataset generated in pass1 and the pooled dataset for pass1 hits.
 
 `segment_images.py` : script that segments all the images for a plate
 
