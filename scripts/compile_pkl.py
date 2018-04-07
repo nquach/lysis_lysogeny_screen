@@ -1,3 +1,10 @@
+'''
+compile_pkl.py
+Compiles pkl files containing the raw and classified fluorescence values for cells in a plate.
+Expect the script to hit errors on certain plates that require specific classification wells. Those that require K29H12 as the classification well, 
+change classify_infections_gmm to classify_infections_gmm2. See the Appendix of the manuscript for the specific classification wells.
+Written by Nicolas Quach
+'''
 #Import packages
 import matplotlib
 matplotlib.use('Agg')
@@ -17,6 +24,9 @@ import seaborn as sns
 import pandas as pd
 import pymc3 as pm
 import json
+import utils
+
+ROOT_DIREC = utils.ROOT_DIREC
 
 #Define root directory path
 direc = "/scratch/users/nquach/"
@@ -26,7 +36,8 @@ plate_numbers = ['1_1','1_2', 3, 5, 7, '9_1','9_2', 11, 13, 15, 17, 19, 21, 23, 
 classification_wells = None
 
 #Import gene name to position map for first pass hits
-titles_dict_path = "/scratch/users/nquach/datatxt/hits_pos_to_name.txt"
+datatxt_direc = os.path.join(ROOT_DIREC, 'datatxt')
+titles_dict_path = os.path.join(datatxt_direc, 'hits_pos_to_name.txt')
 titles_file = open(titles_dict_path,'r')
 titles_dict = json.load(titles_file)
 hits_dict = titles_dict['4']
@@ -35,8 +46,6 @@ data = []
 for plate_number in plate_numbers:
 	plate_name = 'keio' + str(plate_number)
 	data.append(os.path.join(direc, plate_name))
-
-
 
 for root_direc, plate_number in zip(data, plate_numbers):
 	print root_direc

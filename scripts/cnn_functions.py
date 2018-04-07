@@ -1,3 +1,8 @@
+'''
+cnn_functions.py 
+Contains functions for image segmentation via conv-nets.
+Written by David Van Valen
+'''
 """
 CNN layers - Classes for layers for convolutional neural networks
 Builds upon the Keras layer

@@ -1,3 +1,10 @@
+'''
+pool_data.py
+
+Pools the data collected in the preliminary and validation screens. Saves data as a pkl file
+
+Written by Nicolas Quach
+'''
 #Import packages
 import matplotlib
 matplotlib.use('Agg')
@@ -58,5 +65,5 @@ for title in p1_titles:
 	print title
 	pooled_dict[title] = p1_dict[title]
 
-pickle.dump(pooled_dict, open(os.path.join(direc, 'all_pooled__data.pkl'),'w+'), pickle.HIGHEST_PROTOCOL)
+pickle.dump(pooled_dict, open(os.path.join(direc, 'all_pooled_data.pkl'),'w+'), pickle.HIGHEST_PROTOCOL)
 

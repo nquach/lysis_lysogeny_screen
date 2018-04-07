@@ -1,3 +1,9 @@
+'''
+compile_pooled_hits_dict.py
+Calculates cell-fate statistic for all hits found in the preliminary round of screening. Saves the dictionary keyed by gene name in JSON format.
+
+Written by Nicolas Quach
+'''
 #Import packages
 import matplotlib
 matplotlib.use('Agg')
@@ -17,13 +23,16 @@ import seaborn as sns
 import pandas as pd
 import pymc3 as pm
 import json
+import utils
+
+ROOT_DIREC = utils.ROOT_DIREC
 
 #Set root directory
-direc = "/scratch/users/nquach/datatxt/"
+direc = os.path.join(ROOT_DIREC, 'pkl_files')
 #Set directory where you want to save the .txt JSON file
-save_direc = "/scratch/users/nquach/plots/"
+save_direc = os.path.join(ROOT_DIREC, 'datatxt')
 #Load dataset
-pooled_file = open(os.path.join(direc, 'pooled_classified_data.pkl'), 'r')
+pooled_file = open(os.path.join(direc, 'pass2_pooled_classified_data.pkl'), 'r')
 
 pooled_dict = pickle.load(pooled_file)
 

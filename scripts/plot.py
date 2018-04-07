@@ -1,3 +1,9 @@
+'''
+plot.py
+Plots the raw fluorescences values, classified fluorescence values, MOI and lysis posteriors for a particular plate
+
+Written by Nicolas Quach
+'''
 #Import packages
 import matplotlib
 matplotlib.use('Agg')

@@ -1,5 +1,7 @@
 '''
 Model zoo - assortment of CNN architectures
+
+Written by David Van Valen
 '''
 
 # from __future__ import print_function

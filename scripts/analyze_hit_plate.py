@@ -1,3 +1,9 @@
+'''
+analyze_hit_plate.py 
+Extracts fluorescence values for a 96 well plate (or plates) of a preliminary hits plate and classifies them.
+The classified fluorescence values are saved as a pkl file.
+Written by Nicolas Quach
+'''
 import matplotlib
 matplotlib.use('Agg')
 import numpy as np 
@@ -16,8 +22,11 @@ import seaborn as sns
 import pandas as pd
 import pymc3 as pm
 import json
+import utils
 
-#Define root directory
+ROOT_DIREC = utils.ROOT_DIREC
+
+#Define root directory for the data folders
 direc = "/scratch/users/nquach/"
 #List of strings of the paths to the data for the hits plate you want to analyze
 data = [os.path.join(direc, 'hits31')]
@@ -25,10 +34,11 @@ data = [os.path.join(direc, 'hits31')]
 plate_numbers = ['hits31'] 
 
 #Load the map of gene names for hits plates.
-titles_dict_path = "/scratch/users/nquach/datatxt/hits_pos_to_name.txt"
+datatxt_direc = os.path.join(ROOT_DIREC, 'datatxt')
+titles_dict_path = os.path.join(datatxt_direc, 'hits_pos_to_name.txt')
 titles_file = open(titles_dict_path,'r')
 titles_dict = json.load(titles_file)
-#Define which plate is being analyzed
+#Define which plate is being analyzed. So hits plate 3 is keyed as '3'
 hits_dict = titles_dict['3']
 
 for root_direc, plate_number in zip(data, plate_numbers):

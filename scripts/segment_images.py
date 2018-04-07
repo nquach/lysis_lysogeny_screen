@@ -1,7 +1,14 @@
+'''
+segment_images.py
+
+Script used to analyze raw SLIP images. Segments images using DeepCell algorithm.
+
+Written by Nicolas Quach and David Van Valen
+'''
 from SLIP_functions import segment_SLIP
 import os
 
-#Define root directory path
+#Define root directory path to data folders
 root_direc = '/scratch/users/nquach/hits12/'
 
 #define directory path to infection data (all positions)

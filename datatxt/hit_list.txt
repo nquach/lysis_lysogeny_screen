@@ -1,0 +1,1 @@
+["agaV", "astD", "atpC", "cedA", "cstA", "dbpA", "dgoA", "dhaH", "feaB", "fruB", "fucO", "glpK", "gntR", "gspC", "hflC", "hflK", "hokB", "hupB", "ilvL", "intG", "leuA", "leuL", "malM", "mhpT", "msyB", "mtr", "nrdE", "osmY", "rhlE", "rplK", "rsxE", "sodB", "tatD", "tatE", "ugpA", "xylF", "ycgH", "ydgH", "yfaS", "yhaC", "yhhF", "yjgI", "ymcA", "ymfE", "ynfO", "ynjD", "yoaC"]

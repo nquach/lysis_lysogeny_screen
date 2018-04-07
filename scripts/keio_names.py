@@ -4,12 +4,14 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt 
 import openpyxl as xls
+import utils
 
 #Convert keio plate map excel into 3D matrix of names (plate,row, column)
 def get_keio_names():
 
 	#Define path to keio_map.xlsx file
-	data_direc = '/home/nquach/keio_screen/'
+	root_direc = utils.ROOT_DIREC
+	data_direc = os.path.join(root_direc, 'scripts')
 	data_path = os.path.join(data_direc,'keio_map.xlsx')
 
 	#Load excel sheet

@@ -1,3 +1,9 @@
+'''
+compile_pass_pkl.py
+Compiles the data from individual plates into a combined dictionary of data keyed by gene name.
+You MUST run compile_pkl.py before running this script, since it relies on pre-compiled and classified data files in pkl format.
+Written by Nicolas Quach
+'''
 #Import packages
 import matplotlib
 matplotlib.use('Agg')
@@ -18,7 +24,7 @@ import pandas as pd
 import pymc3 as pm
 import json
 
-#set root directory
+#set root directory to data pkl files
 direc = "/scratch/users/nquach/datatxt/"
 #list numbers of the plates you wish to incorporate into the compiled .pkl file
 plate_numbers =['1_1','1_2', 3, 5, 7, '9_1','9_2', 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69, 71, 73, 75, 77, 79, 81, 83, 85, 87, 89, 91, 93, 95]

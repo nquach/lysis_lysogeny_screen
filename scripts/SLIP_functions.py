@@ -1,3 +1,14 @@
+'''
+SLIP_functions.py 
+Contains the definitions for functions used in data analysis of SLIP data.
+Functions perform:
+- segmentation
+- classification with a Gaussian Mixture Model
+- Bayesian inference of lysis ratio and MOI
+- plotting scatterplots of the raw and classified data
+- plotting lysis ratio and MOI posterior distributions
+Written by Nicolas Quach and David Van Valen
+'''
 import matplotlib
 matplotlib.use('Agg')
 import h5py
@@ -18,15 +29,15 @@ import scipy
 from scipy import stats, ndimage
 from matplotlib import pyplot as plt
 import seaborn as sns
-import pymc3 as pm
 import math
 from sklearn import mixture
 import json
 import cPickle as pickle
+import utils
 
 #Load gene name to position maps
 keio_names_array = get_keio_names()
-titles_dict_path = "/scratch/users/nquach/datatxt/hits_pos_to_name.txt"
+titles_dict_path = utils.ROOT_DIREC + "datatxt/hits_pos_to_name.txt"
 titles_file = open(titles_dict_path,'r')
 titles_dict = json.load(titles_file)
 hits_dict = titles_dict['4']
@@ -728,6 +739,77 @@ def classify_infections_gmm(fitc_dict, cherry_dict, wells, classification_wells 
 
 	return lytic_dict, lysogenic_dict, uninfected_dict
 
+def classify_well_gmm2(fitc_list, cherry_list, classification_wells = None):
+	root_direc = os.path.join(utils.ROOT_DIREC, 'pkl_files')
+
+	mean_FITC_control_name = os.path.join(root_direc, 'K29_mean_FITC.pkl')
+	mean_cherry_control_name = os.path.join(root_direc, 'K29_mean_cherry.pkl')
+	mean_FITC_control = pickle.load(open(mean_FITC_control_name, 'rb'))
+	mean_cherry_control = pickle.load(open(mean_cherry_control_name, 'rb'))
+
+	control_fitc_list = []
+	control_cherry_list = []
+
+	if classification_wells is None:
+		classification_wells = wells
+
+	for well in classification_wells:
+		if len(mean_FITC_control[well]) != 0:
+			control_fitc_list += mean_FITC_control[well]
+		if len(mean_cherry_control[well]) != 0:
+			control_cherry_list += mean_cherry_control[well]
+	control_data = np.stack((control_fitc_list,control_cherry_list), axis = 1)
+
+	gmm = mixture.GMM(n_components = 3).fit(control_data)
+
+	#gmm = mixture.GMM(n_components = 3).fit(data)
+
+	#identify populations
+	means = gmm.means_
+
+	fitc_means = np.array([mean[0] for mean in means])
+	cherry_means = np.array([mean[1] for mean in means])
+	index_list = [0,1,2]
+	
+	lysogenic_id = np.argmax(cherry_means)
+	lytic_id = np.argmax(fitc_means)
+	#print lytic_id, lysogenic_id
+	#print fitc_means, cherry_means
+
+	index_list.remove(lytic_id)
+	index_list.remove(lysogenic_id)
+	uninfected_id = index_list[0]
+	
+	lytic_dict = {}
+	lysogenic_dict = {}
+	uninfected_dict = {}
+
+	
+	data_well = np.stack((fitc_list, cherry_list), axis = 1)
+	probs = gmm.predict_proba(data_well)
+
+	lytic_list = []
+	lysogenic_list = []
+	uninfected_list = []
+
+	for j in xrange(data_well.shape[0]):
+
+		if probs[j][lytic_id] > 0.95:
+			if data_well[j,0] > means[uninfected_id][0]:
+				lytic_list += [data_well[j,:]]
+			else:
+				uninfected_list += [data_well[j,:]]
+		elif probs[j][lysogenic_id] > 0.95:
+			if data_well[j,1] > means[uninfected_id][1]:
+				lysogenic_list += [data_well[j,:]]
+			else:
+				uninfected_list += [data_well[j,:]]
+
+		elif probs[j][uninfected_id] > 0.95:
+			uninfected_list += [data_well[j,:]]
+
+	return lytic_list, lysogenic_list, uninfected_list
+
 def classify_infections_gmm2(fitc_dict, cherry_dict, wells, classification_wells = None):
 	"""
     Function: classify_infections_gmm2()
@@ -755,10 +837,10 @@ def classify_infections_gmm2(fitc_dict, cherry_dict, wells, classification_wells
     uninfected_dict : dict
     	dict of lists containing uninfected fluorescence data for each well. key = position (e.g. 'A1'), element = list of lists in the form [fitc_data, cherry_data]
   	"""
-	root_direc = "/scratch/users/nquach/keio29"
+	root_direc = os.path.join(utils.ROOT_DIREC, 'pkl_files')
 
-	mean_FITC_control_name = os.path.join(root_direc, 'mean_FITC.pkl')
-	mean_cherry_control_name = os.path.join(root_direc, 'mean_cherry.pkl')
+	mean_FITC_control_name = os.path.join(root_direc, 'K29_mean_FITC.pkl')
+	mean_cherry_control_name = os.path.join(root_direc, 'K29_mean_cherry.pkl')
 	mean_FITC_control = pickle.load(open(mean_FITC_control_name, 'rb'))
 	mean_cherry_control = pickle.load(open(mean_cherry_control_name, 'rb'))
 
@@ -845,7 +927,7 @@ def classify_infections_gmm2(fitc_dict, cherry_dict, wells, classification_wells
 
 	return lytic_dict, lysogenic_dict, uninfected_dict
 
-def compute_stats(fitc_dict, cherry_dict, wells, titles, save_direc = '/scratch/users/nquach/datatxt/', plate_number = 9, classification_wells = None):
+def compute_stats(fitc_dict, cherry_dict, wells, titles, save_direc = utils.ROOT_DIREC, plate_number = 9, classification_wells = None):
 	"""
     Function: compute_stats()
 
@@ -909,7 +991,7 @@ def compute_stats(fitc_dict, cherry_dict, wells, titles, save_direc = '/scratch/
 	hits_file.close()
 	return None
 
-def plot_slip_wells_gmm(fitc_dict, cherry_dict, wells, titles, save_direc = '/scratch/users/nquach/scatterplot_gmm', plate_number = 9, save_fig = True, classification_wells = None):
+def plot_slip_wells_gmm(fitc_dict, cherry_dict, wells, titles, save_direc = utils.ROOT_DIREC, plate_number = 9, save_fig = True, classification_wells = None):
 	"""
     Function: plot_slip_wells_gmm()
 
@@ -989,7 +1071,7 @@ def plot_slip_wells_gmm(fitc_dict, cherry_dict, wells, titles, save_direc = '/sc
 
 	return None
 
-def plot_slip_wells_lysis_posterior(fitc_dict, cherry_dict, wells, titles, save_direc = '/scratch/users/nquach/lysis_posteriors/', plate_number = 9, save_fig = True, classification_wells = None):
+def plot_slip_wells_lysis_posterior(fitc_dict, cherry_dict, wells, titles, save_direc = utils.ROOT_DIREC, plate_number = 9, save_fig = True, classification_wells = None):
 	"""
     Function: plot_slip_lysis_posterior()
 
@@ -1087,11 +1169,11 @@ def compute_inverse_MOI_posterior(N_infected, N_cells):
     posterior : list of floats
     	list of points on the MOI posterior distribution
   	"""
-    x = np.linspace(0,5,200)
-    gamma = np.float(N_cells)*np.log(1-1/np.float(N_cells))
-    posterior = np.abs(gamma*np.exp(gamma*x))*scipy.stats.beta.pdf(np.exp(gamma*x), 1+N_cells-N_infected, 1+N_infected)
+	x = np.linspace(0,5,200)
+	gamma = np.float(N_cells)*np.log(1-1/np.float(N_cells))
+	posterior = np.abs(gamma*np.exp(gamma*x))*scipy.stats.beta.pdf(np.exp(gamma*x), 1+N_cells-N_infected, 1+N_infected)
 
-    return x, posterior
+	return x, posterior
 
 def plot_slip_wells_MOI_posterior(fitc_dict, cherry_dict, wells, titles, save_direc = '/scratch/users/nquach/MOI_posteriors/', plate_number = 9, save_fig = True, classification_wells = None):
 	"""
@@ -1194,12 +1276,12 @@ def compute_p_lysis_posterior(N_lysis, N_lysogeny):
     -------
     x : list of floats
     	list of probability of lysis values
-    posterior : list of floats
-    	list of points discribing the probability of lysis posterior distribution
-  	"""
-    x = np.linspace(0,1,100)
-    posterior= scipy.stats.beta.pdf(x, 1+N_lysis, 1+N_lysogeny)
-    return x, posterior
+	posterior : list of floats
+	list of points discribing the probability of lysis posterior distribution
+	"""
+	x = np.linspace(0,1,100)
+	posterior= scipy.stats.beta.pdf(x, 1+N_lysis, 1+N_lysogeny)
+	return x, posterior
 
 def cross_corr(im0, im1):
 	"""

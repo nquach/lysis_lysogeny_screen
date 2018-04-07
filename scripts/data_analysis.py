@@ -1,3 +1,8 @@
+'''
+data_analysis.py
+
+Contains definitions for the functions used to analyze the classified data and identify hits
+'''
 import matplotlib
 matplotlib.use('Agg')
 import json
@@ -5,11 +10,14 @@ import os
 import numpy as np
 import xlrd as xls
 import matplotlib.pyplot as plt
+import utils
+
+ROOT_DIREC = utils.ROOT_DIREC
 
 #List all Keio plate numbers
 plate_numbers = ['1_1','1_2', 3, 5, 7, '9_1','9_2', 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69, 71, 73, 75, 77, 79, 81, 83, 85, 89, 95]
 #set root directory
-direc = '/scratch/users/nquach/datatxt/'
+direc = os.path.join(ROOT_DIREC, 'datatxt')
 
 def get_OD_data(plate_numbers):
 	"""
@@ -30,7 +38,7 @@ def get_OD_data(plate_numbers):
     None : None
 		saves the compiled dictionary (dict of dicts) as a .txt file in JSON format
 	"""
-	#set root direc
+	#set root direc where platereader data is
 	direc = '/scratch/users/nquach/'
 	data_direc = os.path.join(direc, 'platereader')
 	save_direc = os.path.join(direc, 'datatxt')
@@ -65,6 +73,7 @@ def get_OD_data(plate_numbers):
 
 def compile_dataset(direc, plate_numbers):
 	"""
+	***DEFUNCT***
     Function: compile_dataset()
 
     Given a root directory path and a list of plate numbers, produces a dict of dicts of cell fate statistic summaries, indexed by plate and position.
@@ -100,6 +109,7 @@ def compile_dataset(direc, plate_numbers):
 
 def compile_dataset_by_name(direc, plate_numbers):
 	"""
+	***DEFUNCT***
     Function: compile_dataset()
 
     Given a root directory path and a list of plate numbers, produces a dict of lists of cell fate statistic summaries, indexed by gene name.

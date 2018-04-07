@@ -1,3 +1,7 @@
+'''
+analyze_keio_plate.py extracts fluorescence values for a 96 well plate (or plates) of the Keio collection and classifies them.
+The classified fluorescence values are saved as a pkl file.
+'''
 import matplotlib
 matplotlib.use('Agg')
 import numpy as np 
@@ -16,7 +20,7 @@ import seaborn as sns
 import pandas as pd
 import pymc3 as pm
 
-#Root directory
+#Root directory for data
 direc = "/scratch/users/nquach/"
 
 #List of paths to the plates you wish to analyze
